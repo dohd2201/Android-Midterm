@@ -27,7 +27,7 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class CurrentSongFragment extends ListFragment {
+public class OnlineSongFragment extends ListFragment {
 
     public ArrayList<SongsList> songsList = new ArrayList<>();
 
@@ -38,7 +38,7 @@ public class CurrentSongFragment extends ListFragment {
     public static Fragment getInstance(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("pos", position);
-        CurrentSongFragment tabFragment = new CurrentSongFragment();
+        OnlineSongFragment tabFragment = new OnlineSongFragment();
         tabFragment.setArguments(bundle);
         return tabFragment;
     }
@@ -71,12 +71,12 @@ public class CurrentSongFragment extends ListFragment {
      * Setting the content in the listView and sending the data to the Activity
      */
     public void setContent() {
-
         final APIInterface apiInterface = RetrofitBuilder.getClient().create(APIInterface.class);
         Call<List<OnlineSong>> call = apiInterface.getListSong();
         call.enqueue(new Callback<List<OnlineSong>>() {
             @Override
             public void onResponse(Call<List<OnlineSong>> call, Response<List<OnlineSong>> response) {
+                songsList.clear();
                 List<OnlineSong> listSong = response.body();
                 if (listSong != null) {
                     for (OnlineSong song :
@@ -88,13 +88,7 @@ public class CurrentSongFragment extends ListFragment {
                         ));
                     }
 
-
                     SongAdapter adapter = new SongAdapter(getContext(), songsList);
-
-//                    if (songsList.size() > 1)
-//                        if (createDataParsed.getPlaylistFlag()) {
-//                            songsList.clear();
-//                        }
 
                     listView.setAdapter(adapter);
                     adapter.notifyDataSetChanged();

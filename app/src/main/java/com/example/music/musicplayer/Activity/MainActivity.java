@@ -34,15 +34,15 @@ import android.widget.Toast;
 
 import com.example.music.musicplayer.Adapter.ViewPagerAdapter;
 import com.example.music.musicplayer.DB.FavoritesOperations;
-import com.example.music.musicplayer.Fragments.AllSongFragment;
-import com.example.music.musicplayer.Fragments.CurrentSongFragment;
+import com.example.music.musicplayer.Fragments.OfflineSongFragment;
+import com.example.music.musicplayer.Fragments.OnlineSongFragment;
 import com.example.music.musicplayer.Fragments.FavSongFragment;
 import com.example.music.musicplayer.Model.SongsList;
 import com.example.music.musicplayer.R;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener, AllSongFragment.createDataParse, FavSongFragment.createDataParsed, CurrentSongFragment.createDataParsed {
+public class MainActivity extends AppCompatActivity implements View.OnClickListener, OfflineSongFragment.createDataParse, FavSongFragment.createDataParsed, OnlineSongFragment.createDataParsed {
 
     private Menu menu;
 

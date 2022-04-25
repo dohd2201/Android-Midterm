@@ -25,7 +25,7 @@ import com.example.music.musicplayer.R;
 
 import java.util.ArrayList;
 
-public class AllSongFragment extends ListFragment {
+public class OfflineSongFragment extends ListFragment {
 
 
     private static ContentResolver contentResolver1;
@@ -41,7 +41,7 @@ public class AllSongFragment extends ListFragment {
     public static Fragment getInstance(int position, ContentResolver mcontentResolver) {
         Bundle bundle = new Bundle();
         bundle.putInt("pos", position);
-        AllSongFragment tabFragment = new AllSongFragment();
+        OfflineSongFragment tabFragment = new OfflineSongFragment();
         tabFragment.setArguments(bundle);
         contentResolver1 = mcontentResolver;
         return tabFragment;

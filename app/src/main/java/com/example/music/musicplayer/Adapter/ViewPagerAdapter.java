@@ -6,8 +6,8 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.music.musicplayer.Fragments.AllSongFragment;
-import com.example.music.musicplayer.Fragments.CurrentSongFragment;
+import com.example.music.musicplayer.Fragments.OfflineSongFragment;
+import com.example.music.musicplayer.Fragments.OnlineSongFragment;
 import com.example.music.musicplayer.Fragments.FavSongFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
@@ -24,9 +24,9 @@ public class ViewPagerAdapter extends FragmentPagerAdapter {
     public Fragment getItem(int position) {
         switch (position) {
             case 0:
-                return AllSongFragment.getInstance(position, contentResolver);
+                return OfflineSongFragment.getInstance(position, contentResolver);
             case 1:
-                return CurrentSongFragment.getInstance(position);
+                return OnlineSongFragment.getInstance(position);
             case 2:
                 return FavSongFragment.getInstance(position);
             default:
