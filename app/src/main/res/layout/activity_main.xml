@@ -57,6 +57,7 @@
             android:layout_below="@id/ll_tab_layout"
             app:layout_behavior="@string/appbar_scrolling_view_behavior" />
 
+
         <android.support.design.widget.FloatingActionButton
             android:id="@+id/btn_refresh"
             android:layout_width="wrap_content"
@@ -71,6 +72,7 @@
             app:layout_anchor="@id/songs_viewpager" />
 
     </RelativeLayout>
+
 
     <android.support.design.widget.NavigationView
         android:id="@+id/nav_view"
