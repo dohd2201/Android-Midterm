@@ -1,4 +1,4 @@
-package com.example.soc_macmini_15.musicplayer.Activity;
+package com.example.music.musicplayer.Activity;
 
 import android.Manifest;
 import android.app.SearchManager;
@@ -32,13 +32,13 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import com.example.soc_macmini_15.musicplayer.Adapter.ViewPagerAdapter;
-import com.example.soc_macmini_15.musicplayer.DB.FavoritesOperations;
-import com.example.soc_macmini_15.musicplayer.Fragments.AllSongFragment;
-import com.example.soc_macmini_15.musicplayer.Fragments.CurrentSongFragment;
-import com.example.soc_macmini_15.musicplayer.Fragments.FavSongFragment;
-import com.example.soc_macmini_15.musicplayer.Model.SongsList;
-import com.example.soc_macmini_15.musicplayer.R;
+import com.example.music.musicplayer.Adapter.ViewPagerAdapter;
+import com.example.music.musicplayer.DB.FavoritesOperations;
+import com.example.music.musicplayer.Fragments.AllSongFragment;
+import com.example.music.musicplayer.Fragments.CurrentSongFragment;
+import com.example.music.musicplayer.Fragments.FavSongFragment;
+import com.example.music.musicplayer.Model.SongsList;
+import com.example.music.musicplayer.R;
 
 import java.util.ArrayList;
 

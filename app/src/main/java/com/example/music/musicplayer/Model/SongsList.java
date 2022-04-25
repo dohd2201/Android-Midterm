@@ -1,4 +1,4 @@
-package com.example.soc_macmini_15.musicplayer.Model;
+package com.example.music.musicplayer.Model;
 
 public class SongsList {
 

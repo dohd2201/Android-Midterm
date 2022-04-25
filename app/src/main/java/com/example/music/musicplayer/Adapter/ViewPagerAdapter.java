@@ -1,4 +1,4 @@
-package com.example.soc_macmini_15.musicplayer.Adapter;
+package com.example.music.musicplayer.Adapter;
 
 import android.content.ContentResolver;
 import android.support.annotation.Nullable;
@@ -6,14 +6,14 @@ import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 
-import com.example.soc_macmini_15.musicplayer.Fragments.AllSongFragment;
-import com.example.soc_macmini_15.musicplayer.Fragments.CurrentSongFragment;
-import com.example.soc_macmini_15.musicplayer.Fragments.FavSongFragment;
+import com.example.music.musicplayer.Fragments.AllSongFragment;
+import com.example.music.musicplayer.Fragments.CurrentSongFragment;
+import com.example.music.musicplayer.Fragments.FavSongFragment;
 
 public class ViewPagerAdapter extends FragmentPagerAdapter {
 
     private ContentResolver contentResolver;
-    private String title[] = {"All SONGS","CURRENT PLAYLIST", "FAVORITES"};
+    private String title[] = {"MUSIC OFFLINE","MUSIC ONLINE", "FAVORITES"};
 
     public ViewPagerAdapter(FragmentManager fm, ContentResolver contentResolver) {
         super(fm);

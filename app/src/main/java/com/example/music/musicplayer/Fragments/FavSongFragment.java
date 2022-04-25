@@ -1,14 +1,9 @@
-package com.example.soc_macmini_15.musicplayer.Fragments;
+package com.example.music.musicplayer.Fragments;
 
 
-import android.content.ContentResolver;
 import android.content.Context;
 import android.content.DialogInterface;
-import android.database.Cursor;
-import android.graphics.Color;
-import android.net.Uri;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,35 +13,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
-import com.example.soc_macmini_15.musicplayer.Adapter.SongAdapter;
-import com.example.soc_macmini_15.musicplayer.Model.SongsList;
-import com.example.soc_macmini_15.musicplayer.R;
+import com.example.music.musicplayer.Adapter.SongAdapter;
+import com.example.music.musicplayer.DB.FavoritesOperations;
+import com.example.music.musicplayer.Model.SongsList;
+import com.example.music.musicplayer.R;
 
 import java.util.ArrayList;
 
-public class AllSongFragment extends ListFragment {
+public class FavSongFragment extends ListFragment {
 
+    private FavoritesOperations favoritesOperations;
 
-    private static ContentResolver contentResolver1;
 
     public ArrayList<SongsList> songsList;
     public ArrayList<SongsList> newList;
 
     private ListView listView;
 
-    private createDataParse createDataParse;
-    private ContentResolver contentResolver;
+    private createDataParsed createDataParsed;
 
-    public static Fragment getInstance(int position, ContentResolver mcontentResolver) {
+    public static Fragment getInstance(int position) {
         Bundle bundle = new Bundle();
         bundle.putInt("pos", position);
-        AllSongFragment tabFragment = new AllSongFragment();
+        FavSongFragment tabFragment = new FavSongFragment();
         tabFragment.setArguments(bundle);
-        contentResolver1 = mcontentResolver;
         return tabFragment;
     }
 
@@ -59,7 +52,8 @@ public class AllSongFragment extends ListFragment {
     @Override
     public void onAttach(Context context) {
         super.onAttach(context);
-        createDataParse = (createDataParse) context;
+        createDataParsed = (createDataParsed) context;
+        favoritesOperations = new FavoritesOperations(context);
     }
 
     @Override
@@ -70,7 +64,6 @@ public class AllSongFragment extends ListFragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         listView = view.findViewById(R.id.list_playlist);
-        contentResolver = contentResolver1;
         setContent();
     }
 
@@ -81,16 +74,16 @@ public class AllSongFragment extends ListFragment {
         boolean searchedList = false;
         songsList = new ArrayList<>();
         newList = new ArrayList<>();
-        getMusic();
+        songsList = favoritesOperations.getAllFavorites();
         SongAdapter adapter = new SongAdapter(getContext(), songsList);
-        if (!createDataParse.queryText().equals("")) {
+        if (!createDataParsed.queryText().equals("")) {
             adapter = onQueryTextChange();
             adapter.notifyDataSetChanged();
             searchedList = true;
         } else {
             searchedList = false;
         }
-        createDataParse.getLength(songsList.size());
+
         listView.setAdapter(adapter);
 
         final boolean finalSearchedList = searchedList;
@@ -99,42 +92,42 @@ public class AllSongFragment extends ListFragment {
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 // Toast.makeText(getContext(), "You clicked :\n" + songsList.get(position), Toast.LENGTH_SHORT).show();
                 if (!finalSearchedList) {
-                    createDataParse.onDataPass(songsList.get(position).getTitle(), songsList.get(position).getPath());
-                    createDataParse.fullSongList(songsList, position);
+                    createDataParsed.onDataPass(songsList.get(position).getTitle(), songsList.get(position).getPath());
+                    createDataParsed.fullSongList(songsList, position);
                 } else {
-                    createDataParse.onDataPass(newList.get(position).getTitle(), newList.get(position).getPath());
-                    createDataParse.fullSongList(songsList, position);
+                    createDataParsed.onDataPass(newList.get(position).getTitle(), newList.get(position).getPath());
+                    createDataParsed.fullSongList(songsList, position);
                 }
             }
         });
-
         listView.setOnItemLongClickListener(new AdapterView.OnItemLongClickListener() {
             @Override
             public boolean onItemLongClick(AdapterView<?> parent, View view, int position, long id) {
-                showDialog(position);
+                deleteOption(position);
                 return true;
             }
         });
     }
 
+    private void deleteOption(int position) {
+        if (position != createDataParsed.getPosition())
+            showDialog(songsList.get(position).getPath(), position);
+        else
+            Toast.makeText(getContext(), "You Can't delete the Current Song", Toast.LENGTH_SHORT).show();
+    }
 
-    public void getMusic() {
-        Uri songUri = MediaStore.Audio.Media.EXTERNAL_CONTENT_URI;
-        Cursor songCursor = contentResolver.query(songUri, null, null, null, null);
-        if (songCursor != null && songCursor.moveToFirst()) {
-            int songTitle = songCursor.getColumnIndex(MediaStore.Audio.Media.TITLE);
-            int songArtist = songCursor.getColumnIndex(MediaStore.Audio.Media.ARTIST);
-            int songPath = songCursor.getColumnIndex(MediaStore.Audio.Media.DATA);
+    public interface createDataParsed {
+        public void onDataPass(String name, String path);
 
-            do {
-                songsList.add(new SongsList(songCursor.getString(songTitle), songCursor.getString(songArtist), songCursor.getString(songPath)));
-            } while (songCursor.moveToNext());
-            songCursor.close();
-        }
+        public void fullSongList(ArrayList<SongsList> songList, int position);
+
+        public int getPosition();
+
+        public String queryText();
     }
 
     public SongAdapter onQueryTextChange() {
-        String text = createDataParse.queryText();
+        String text = createDataParsed.queryText();
         for (SongsList songs : songsList) {
             String title = songs.getTitle().toLowerCase();
             if (title.contains(text)) {
@@ -145,9 +138,10 @@ public class AllSongFragment extends ListFragment {
 
     }
 
-    private void showDialog(final int position) {
+    private void showDialog(final String index, final int position) {
         AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
-        builder.setMessage(getString(R.string.play_next))
+        builder.setTitle(getString(R.string.delete))
+                .setMessage(getString(R.string.delete_text))
                 .setCancelable(true)
                 .setNegativeButton(R.string.no, new DialogInterface.OnClickListener() {
                     @Override
@@ -158,23 +152,13 @@ public class AllSongFragment extends ListFragment {
                 .setPositiveButton(R.string.yes, new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
-                        createDataParse.currentSong(songsList.get(position));
+                        favoritesOperations.removeSong(index);
+                        createDataParsed.fullSongList(songsList, position);
                         setContent();
                     }
                 });
         AlertDialog alertDialog = builder.create();
         alertDialog.show();
-    }
-
-    public interface createDataParse {
-        public void onDataPass(String name, String path);
-
-        public void fullSongList(ArrayList<SongsList> songList, int position);
-
-        public String queryText();
-
-        public void currentSong(SongsList songsList);
-        public void getLength(int length);
     }
 
 }
